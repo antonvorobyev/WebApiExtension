@@ -286,6 +286,59 @@ class WebApiContext implements ApiClientAwareContext
     }
 
     /**
+     * Checks that response body contains XML from PyString.
+     *
+     * Do not check that the response body /only/ contains the XML from PyString,
+     *
+     * @param PyStringNode $xmlString
+     *
+     * @throws \RuntimeException
+     *
+     * @Then /^(?:the )?response should contain xml:$/
+     */
+    public function theResponseShouldContainXml(PyStringNode $xmlString)
+    {
+        $etalon = static::xml_decode($this->replacePlaceHolder($xmlString->getRaw()), true);
+        $actual = static::xml_decode($this->response->getBody(), true);
+
+        if (null === $etalon) {
+            throw new \RuntimeException(
+                "Can not convert etalon to xml:\n" . $this->replacePlaceHolder($xmlString->getRaw())
+            );
+        }
+
+        if (null === $actual) {
+            throw new \RuntimeException(
+                "Can not convert actual to xml:\n" . $this->replacePlaceHolder((string) $this->response->getBody())
+            );
+        }
+
+        Assertions::assertGreaterThanOrEqual(count($etalon), count($actual));
+        foreach ($etalon as $key => $needle) {
+            Assertions::assertArrayHasKey($key, $actual);
+            Assertions::assertEquals($etalon[$key], $actual[$key]);
+        }
+    }
+
+    /**
+     * TODO: Write phpdoc
+     * TODO: Sync functionality with json_decode()
+     * TODO: Implement tests
+     *
+     * @param $xml
+     * @param bool $assoc
+     * @return mixed
+     */
+    protected static function xml_decode($xml, $assoc = false) {
+        $parser = xml_parser_create();
+        xml_parse_into_struct($parser, $xml, $vals, $index);
+        xml_parser_free($parser);
+
+        return $vals;
+    }
+
+
+    /**
      * Prints last response body.
      *
      * @Then print response

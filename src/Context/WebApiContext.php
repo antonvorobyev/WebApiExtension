@@ -61,6 +61,10 @@ class WebApiContext implements ApiClientAwareContext
         $this->client = $client;
     }
 
+    protected function logAll() {
+        $this->getClient()->setDefaultOption('debug', true);
+    }
+
     /**
      * Adds Basic Authentication header to next request.
      *

@@ -223,6 +223,21 @@ class WebApiContext implements ApiClientAwareContext
     }
 
     /**
+     * Checks that response has specific header.
+     *
+     * @param string $name header name
+     * @param string $value header value
+     *
+     * @Then /^(?:the )?response should contain header "([^"]*)" with value "([^"]*)"$/
+     */
+    public function theResponseShouldContainHeader($name, $value)
+    {
+        $expected = $value;
+        $actual = $this->response->getHeader($name);
+        Assertions::assertSame($expected, $actual);
+    }
+
+    /**
      * Checks that response body contains specific text.
      *
      * @param string $text

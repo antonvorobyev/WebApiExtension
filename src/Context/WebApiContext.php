@@ -42,6 +42,11 @@ class WebApiContext implements ApiClientAwareContext
     private $headers = array();
 
     /**
+     * @var bool
+     */
+    private $logAll = false;
+
+    /**
      * @var \GuzzleHttp\Message\RequestInterface|RequestInterface
      */
     private $request;
@@ -59,10 +64,15 @@ class WebApiContext implements ApiClientAwareContext
     public function setClient(ClientInterface $client)
     {
         $this->client = $client;
+
+        if ($this->logAll) {
+            $this->client->setDefaultOption('debug', true);
+        }
+
     }
 
     protected function logAll() {
-        $this->getClient()->setDefaultOption('debug', true);
+        $this->logAll = true;
     }
 
     /**

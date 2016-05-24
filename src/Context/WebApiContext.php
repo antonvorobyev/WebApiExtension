@@ -223,6 +223,19 @@ class WebApiContext implements ApiClientAwareContext
     }
 
     /**
+     * Checks that response has specific media type.
+     *
+     * @param string $mediaType media type
+     *
+     * @Then /^(?:the )?response media type should be "([^"]*)"$/
+     */
+    public function theResponseMediaTypeShouldBe($mediaType)
+    {
+        $header = $this->response->getHeader('Content-Type');
+        Assertions::assertContains($mediaType, $header);
+    }
+
+    /**
      * Checks that response has specific header.
      *
      * @param string $name header name

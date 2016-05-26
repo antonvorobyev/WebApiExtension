@@ -264,6 +264,17 @@ class WebApiContext implements ApiClientAwareContext
     }
 
     /**
+     * Checks that response has ETag header.
+     *
+     * @Then /^(?:the )?response etag should be not empty$/
+     */
+    public function theResponseEtagShouldNotBeEmpty()
+    {
+        $header = $this->response->getHeader('ETag');
+        Assertions::assertNotEmpty($header);
+    }
+
+    /**
      * Checks that response has specific header.
      *
      * @param string $name header name

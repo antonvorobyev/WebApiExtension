@@ -286,6 +286,17 @@ class WebApiContext implements ApiClientAwareContext
     }
 
     /**
+     * Checks that response has last modified header.
+     *
+     * @Then /^(?:the )?response last modified header should be not empty$/
+     */
+    public function theResponseLastModifiedHeaderShouldNotBeEmpty()
+    {
+        $header = $this->response->getHeader('ETag');
+        Assertions::assertNotEmpty($header);
+    }
+
+    /**
      * Checks that response has specific header.
      *
      * @param string $name header name

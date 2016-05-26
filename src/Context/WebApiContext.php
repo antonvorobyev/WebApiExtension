@@ -69,6 +69,7 @@ class WebApiContext implements ApiClientAwareContext
             $this->client->setDefaultOption('debug', true);
         }
 
+        $this->setPlaceHolder('<base_url>', $client->getBaseUrl());
     }
 
     protected function logAll() {

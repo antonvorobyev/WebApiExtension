@@ -251,6 +251,19 @@ class WebApiContext implements ApiClientAwareContext
     }
 
     /**
+     * Checks that response has specific charset.
+     *
+     * @param string $charset charset
+     *
+     * @Then /^(?:the )?response charset should be "([^"]*)"$/
+     */
+    public function theResponseCharsetShouldBe($charset)
+    {
+        $header = $this->response->getHeader('Content-Type');
+        Assertions::assertContains($charset, $header);
+    }
+
+    /**
      * Checks that response has specific header.
      *
      * @param string $name header name

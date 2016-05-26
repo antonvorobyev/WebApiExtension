@@ -275,6 +275,17 @@ class WebApiContext implements ApiClientAwareContext
     }
 
     /**
+     * Checks that response has Date header.
+     *
+     * @Then /^(?:the )?response date should be not empty$/
+     */
+    public function theResponseDateShouldNotBeEmpty()
+    {
+        $header = $this->response->getHeader('Date');
+        Assertions::assertNotEmpty($header);
+    }
+
+    /**
      * Checks that response has specific header.
      *
      * @param string $name header name

@@ -340,10 +340,13 @@ class WebApiContext implements ApiClientAwareContext
      */
     public function theResponseShouldContainXml(PyStringNode $xmlString)
     {
-        $etalon = static::xml_decode($this->replacePlaceHolder($xmlString->getRaw()), true);
-        $actual = static::xml_decode($this->response->getBody(), true);
+//        TODO: Make pretty decoding
+        $expected = $this->replacePlaceHolder($xmlString->getRaw());
+//        $etalon = static::xml_decode($this->replacePlaceHolder($xmlString->getRaw()), true);
+        $actual = (string) $this->response->getBody();
+//        $actual = static::xml_decode($this->response->getBody(), true);
 
-        if (null === $etalon) {
+        if (null === $expected) {
             throw new \RuntimeException(
                 "Can not convert etalon to xml:\n" . $this->replacePlaceHolder($xmlString->getRaw())
             );
@@ -355,11 +358,17 @@ class WebApiContext implements ApiClientAwareContext
             );
         }
 
-        Assertions::assertGreaterThanOrEqual(count($etalon), count($actual));
-        foreach ($etalon as $key => $needle) {
-            Assertions::assertArrayHasKey($key, $actual);
-            Assertions::assertEquals($etalon[$key], $actual[$key]);
-        }
+//        Assertions::assertGreaterThanOrEqual(count($etalon), count($actual),
+//        'Need ' . print_r($etalon, true) . ', but was ' . print_r($actual, true));
+
+        Assertions::assertXmlStringEqualsXmlString($expected, $actual);
+
+//        foreach ($etalon as $key => $needle) {
+//            Assertions::assertArrayHasKey($key, $actual);
+//            Assertions::assertEquals($etalon[$key], $actual[$key],
+//                'Attempted to assert key ' . $key . ' in expected ' . print_r($etalon, true) . ' and actual ' . print_r($actual, true));
+//        }
+
     }
 
     /**

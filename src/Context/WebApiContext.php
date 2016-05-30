@@ -92,6 +92,20 @@ class WebApiContext implements ApiClientAwareContext
     }
 
     /**
+     * Adds Bearer Token into Authentication header to next request.
+     *
+     * @param string $token
+     *
+     * @Given /^I am authenticating with "([^"]*)" token$/
+     */
+    public function iAmAuthenticatingWithToken($token)
+    {
+        $this->removeHeader('Authorization');
+        $this->authorization = $token;
+        $this->addHeader('Authorization', 'Bearer ' . $this->authorization);
+    }
+
+    /**
      * Sets a HTTP Header.
      *
      * @param string $name  header name

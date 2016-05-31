@@ -326,6 +326,17 @@ class WebApiContext implements ApiClientAwareContext
     }
 
     /**
+     * Checks that response has not empty header.
+     *
+     * @Then /^(?:the )?response header "([^"]*)" should not be empty$/
+     */
+    public function theResponseHeaderShouldNotBeEmpty($name)
+    {
+        $header = $this->response->getHeader($name);
+        Assertions::assertNotEmpty($header, "Header '$header' should not be empty");
+    }
+
+    /**
      * Checks that response body contains specific text.
      *
      * @param string $text

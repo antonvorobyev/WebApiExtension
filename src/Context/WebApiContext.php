@@ -287,7 +287,7 @@ class WebApiContext implements ApiClientAwareContext
     {
         $header = $this->response->getHeader('Content-Type');
         Assertions::assertContains($charset, $header);
-    }1
+    }
 
     /**
      * Checks that response has charset declared.
@@ -365,7 +365,7 @@ class WebApiContext implements ApiClientAwareContext
     {
         $this->theResponseEtagShouldNotBeEmpty();
         $this->theResponseDateShouldNotBeEmpty();
-        $this->theResponseLastModifiedHeaderShouldNotBeEmpty();
+        $this->theResponseLastModifiedShouldNotBeEmpty();
         $this->theResponseCacheControlShouldNotBeEmpty();
         $this->theResponseShouldContainHeader('Cache-Control', 'max-age=0, private, must-revalidate');
     }

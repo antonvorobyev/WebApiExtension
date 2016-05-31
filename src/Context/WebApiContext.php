@@ -314,6 +314,19 @@ class WebApiContext implements ApiClientAwareContext
     }
 
     /**
+     * Checks that response has not ETag header.
+     *
+     * @Then /^(?:the )?response etag should be unknown$/
+     */
+    public function theResponseEtagShouldBeUnknown()
+    {
+        $name = 'ETag';
+        $header = $this->response->getHeader($name);
+        Assertions::assertNull($header, "Header '$name' should not be");
+    }
+
+
+    /**
      * Checks that response has Date header.
      *
      * @Then /^(?:the )?response date should be not empty$/
@@ -378,7 +391,7 @@ class WebApiContext implements ApiClientAwareContext
      */
     public function theResponseShouldNotBeCacheable()
     {
-        $this->theResponseEtagShouldNotBeEmpty();
+        $this->theResponseEtagShouldBeUnknown();
         $this->theResponseLastModifiedShouldBeUnknown();
         $this->theResponseShouldContainHeader('Cache-Control', 'no-cache');
     }

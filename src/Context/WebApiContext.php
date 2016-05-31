@@ -308,8 +308,9 @@ class WebApiContext implements ApiClientAwareContext
      */
     public function theResponseEtagShouldNotBeEmpty()
     {
-        $header = $this->response->getHeader('ETag');
-        Assertions::assertNotEmpty($header);
+        $name = 'ETag';
+        $header = $this->response->getHeader($name);
+        Assertions::assertNotEmpty($header, "Header '$name' should not be empty");
     }
 
     /**

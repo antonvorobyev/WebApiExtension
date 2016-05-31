@@ -322,7 +322,7 @@ class WebApiContext implements ApiClientAwareContext
     {
         $name = 'ETag';
         $header = $this->response->getHeader($name);
-        Assertions::assertNull($header, "Header '$name' should not be here, but it is '$header'");
+        Assertions::assertEmpty($header, "Header '$name' should not be here, but it is '" . print_r($header, true) . "'");
     }
 
 

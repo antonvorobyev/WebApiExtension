@@ -287,7 +287,7 @@ class WebApiContext implements ApiClientAwareContext
     {
         $header = $this->response->getHeader('Content-Type');
         Assertions::assertContains($charset, $header);
-    }
+    }1
 
     /**
      * Checks that response has charset declared.
@@ -326,12 +326,23 @@ class WebApiContext implements ApiClientAwareContext
     /**
      * Checks that response has last modified header.
      *
-     * @Then /^(?:the )?response last modified header should be not empty$/
+     * @Then /^(?:the )?response last modified should not be empty$/
      */
-    public function theResponseLastModifiedHeaderShouldNotBeEmpty()
+    public function theResponseLastModifiedShouldNotBeEmpty()
     {
-        $header = $this->response->getHeader('ETag');
+        $header = $this->response->getHeader('Last-Modified');
         Assertions::assertNotEmpty($header);
+    }
+
+    /**
+     * Checks that response has not last modified header.
+     *
+     * @Then /^(?:the )?response last modified should be unknown$/
+     */
+    public function theResponseLastModifiedShouldBeUnknown()
+    {
+        $header = $this->response->getHeader('Last-Modified');
+        Assertions::assertNull($header);
     }
 
     /**

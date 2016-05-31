@@ -265,6 +265,18 @@ class WebApiContext implements ApiClientAwareContext
     }
 
     /**
+     * Checks that response has media type declared.
+     *
+     * @Then /^(?:the )?response media type should be known$/
+     */
+    public function theResponseMediaTypeShouldBeKnown()
+    {
+        $header = $this->response->getHeader('Content-Type');
+//      TODO: Fix hard coded media type value
+        Assertions::assertContains('application/xml', $header);
+    }
+
+    /**
      * Checks that response has specific charset.
      *
      * @param string $charset charset
@@ -275,6 +287,18 @@ class WebApiContext implements ApiClientAwareContext
     {
         $header = $this->response->getHeader('Content-Type');
         Assertions::assertContains($charset, $header);
+    }
+
+    /**
+     * Checks that response has charset declared.
+     *
+     * @Then /^(?:the )?response charset should be known$/
+     */
+    public function theResponseCharsetShouldBeKnown()
+    {
+        $header = $this->response->getHeader('Content-Type');
+//      TODO: Fix hard coded charset value
+        Assertions::assertContains('UTF-8', $header);
     }
 
     /**
@@ -333,6 +357,18 @@ class WebApiContext implements ApiClientAwareContext
         $this->theResponseLastModifiedHeaderShouldNotBeEmpty();
         $this->theResponseCacheControlShouldNotBeEmpty();
         $this->theResponseShouldContainHeader('Cache-Control', 'max-age=0, private, must-revalidate');
+    }
+
+    /**
+     * Checks that response is well-formed.
+     *
+     * @Then /^(?:the )?response should be well-formed$/
+     */
+    public function theResponseShouldBeWellFormed()
+    {
+        $this->theResponseMediaTypeShouldBeKnown();
+        $this->theResponseCharsetShouldBeKnown();
+        $this->theResponseCacheControlShouldNotBeEmpty();
     }
 
     /**

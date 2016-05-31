@@ -371,6 +371,18 @@ class WebApiContext implements ApiClientAwareContext
     }
 
     /**
+     * Checks that response is not cacheable.
+     *
+     * @Then /^(?:the )?response should not be cacheable$/
+     */
+    public function theResponseShouldNotBeCacheable()
+    {
+        $this->theResponseEtagShouldNotBeEmpty();
+        $this->theResponseLastModifiedShouldBeUnknown();
+        $this->theResponseShouldContainHeader('Cache-Control', 'no-cache');
+    }
+
+    /**
      * Checks that response is well-formed.
      *
      * @Then /^(?:the )?response should be well-formed$/

@@ -311,6 +311,17 @@ class WebApiContext implements ApiClientAwareContext
     }
 
     /**
+     * Checks that response has Cache-Control header.
+     *
+     * @Then /^(?:the )?response cache-control should be not empty$/
+     */
+    public function theResponseCacheControlShouldNotBeEmpty()
+    {
+        $header = $this->response->getHeader('Cache-Control');
+        Assertions::assertNotEmpty($header, "Header 'Cache-Control' should not be empty");
+    }
+
+    /**
      * Checks that response has specific header.
      *
      * @param string $name header name
@@ -333,7 +344,7 @@ class WebApiContext implements ApiClientAwareContext
     public function theResponseHeaderShouldNotBeEmpty($name)
     {
         $header = $this->response->getHeader($name);
-        Assertions::assertNotEmpty($header, "Header '$header' should not be empty");
+        Assertions::assertNotEmpty($header, "Header '$name' should not be empty");
     }
 
     /**

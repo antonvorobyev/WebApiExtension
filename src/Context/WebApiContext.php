@@ -322,6 +322,20 @@ class WebApiContext implements ApiClientAwareContext
     }
 
     /**
+     * Checks that response is cacheable.
+     *
+     * @Then /^(?:the )?response should be cacheable$/
+     */
+    public function theResponseShouldBeCacheable()
+    {
+        $this->theResponseEtagShouldNotBeEmpty();
+        $this->theResponseDateShouldNotBeEmpty();
+        $this->theResponseLastModifiedHeaderShouldNotBeEmpty();
+        $this->theResponseCacheControlShouldNotBeEmpty();
+        $this->theResponseShouldContainHeader('Cache-Control', 'max-age=0, private, must-revalidate');
+    }
+
+    /**
      * Checks that response has specific header.
      *
      * @param string $name header name

@@ -355,8 +355,9 @@ class WebApiContext implements ApiClientAwareContext
      */
     public function theResponseLastModifiedShouldBeUnknown()
     {
-        $header = $this->response->getHeader('Last-Modified');
-        Assertions::assertNull($header);
+        $name = 'Last-Modified';
+        $header = $this->response->getHeader($name);
+        Assertions::assertEmpty($header, "Header '$name' should not be here, but it is '" . print_r($header, true) . "'");
     }
 
     /**

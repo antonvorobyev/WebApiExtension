@@ -16,6 +16,7 @@ use GuzzleHttp\ClientInterface;
 use GuzzleHttp\Exception\RequestException;
 use GuzzleHttp\Psr7\Request;
 use PHPUnit_Framework_Assert as Assertions;
+use PHPUnit_Util_XML;
 use Psr\Http\Message\RequestInterface;
 use Psr\Http\Message\ResponseInterface;
 
@@ -541,6 +542,84 @@ class WebApiContext implements ApiClientAwareContext
 //        }
 
     }
+
+    /**
+     * Checks that response body contains XML matching schema from PyString.
+     *
+     * @param PyStringNode $xsdString
+     *
+     * @throws \RuntimeException
+     *
+     * @Then /^(?:the )?response should contain xml matching schema:$/
+     */
+    public function theResponseShouldContainXmlMatchingSchema(PyStringNode $xsdString)
+    {
+        $schema = $this->replacePlaceHolder($xsdString->getRaw());
+        $actualString = (string) $this->response->getBody();
+
+        if (null === $schema) {
+            throw new \RuntimeException(
+                "Can not convert schema to xsd:\n" . $this->replacePlaceHolder($xsdString->getRaw())
+            );
+        }
+
+        if (null === $actualString) {
+            throw new \RuntimeException(
+                "Can not convert actual to xml:\n" . $this->replacePlaceHolder((string) $this->response->getBody())
+            );
+        }
+
+        $actual = PHPUnit_Util_XML::load($actualString);
+
+        libxml_use_internal_errors(true);
+
+        $valid = $actual->schemaValidateSource($schema);
+
+        $message = '';
+        if (!$valid) {
+
+            $linedActualString = explode("\n", $actualString);
+
+            $errors = libxml_get_errors();
+
+            foreach ($errors as $error) {
+                $message .= $this->display_xml_error($error, $linedActualString);
+            }
+        }
+
+        Assertions::assertTrue($valid, $message);
+
+        libxml_clear_errors();
+    }
+
+    function display_xml_error($error, $xml)
+    {
+        $return  = $xml[$error->line - 1] . "\n";
+        $return .= str_repeat('-', $error->column) . "^\n";
+
+        switch ($error->level) {
+            case LIBXML_ERR_WARNING:
+                $return .= "Warning $error->code: ";
+                break;
+            case LIBXML_ERR_ERROR:
+                $return .= "Error $error->code: ";
+                break;
+            case LIBXML_ERR_FATAL:
+                $return .= "Fatal Error $error->code: ";
+                break;
+        }
+
+        $return .= trim($error->message) .
+            "\n  Line: $error->line" .
+            "\n  Column: $error->column";
+
+//        if ($error->file) {
+//            $return .= "\n  File: $error->file";
+//        }
+
+        return "$return\n\n--------------------------------------------\n\n";
+    }
+
 
     /**
      * TODO: Write phpdoc

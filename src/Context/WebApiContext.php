@@ -12,6 +12,7 @@ namespace Behat\WebApiExtension\Context;
 
 use Behat\Gherkin\Node\PyStringNode;
 use Behat\Gherkin\Node\TableNode;
+use DOMXPath;
 use GuzzleHttp\ClientInterface;
 use GuzzleHttp\Exception\RequestException;
 use GuzzleHttp\Psr7\Request;
@@ -586,6 +587,35 @@ class WebApiContext implements ApiClientAwareContext
 //                'Attempted to assert key ' . $key . ' in expected ' . print_r($etalon, true) . ' and actual ' . print_r($actual, true));
 //        }
 
+    }
+
+
+    /**
+     * Checks that response body contains XML elements in specified count.
+     *
+     * @param string $xpath
+     * @param integer $count
+     *
+     * @throws \RuntimeException
+     *
+     * @Then /^(?:the )?response should contain xml elements "([^"]*)" in count "([^"]*)" $/
+     */
+    public function theResponseShouldContainXmlElementsInCount($xpath, $count)
+    {
+        $expected = intval($count);
+        $actual = (string) $this->response->getBody();
+
+        if (null === $actual) {
+            throw new \RuntimeException(
+                "Can not convert actual to xml:\n" . $this->replacePlaceHolder((string) $this->response->getBody())
+            );
+        }
+
+        $actual = PHPUnit_Util_XML::load($actual);
+        $actual = new DOMXPath($actual);
+        $actual = intval($actual->evaluate('count(' . $xpath . ')'));
+
+        Assertions::assertEquals($expected, $actual);
     }
 
     /**

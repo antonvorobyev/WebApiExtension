@@ -178,6 +178,50 @@ class WebApiContext implements ApiClientAwareContext
     }
 
     /**
+     * Sends HTTP request to specific URL with query params from Table.
+     *
+     * @param string    $method request method
+     * @param string    $url    relative url
+     * @param TableNode $queryParams   table of query params values
+     *
+     * @When /^(?:I )?send a ([A-Z]+) request to "([^"]+)" with query params:$/
+     */
+    public function iSendARequestWithQuery($method, $url, TableNode $queryParams)
+    {
+        $url = $this->prepareUrl($url);
+        $params = array();
+
+        foreach ($queryParams->getRowsHash() as $key => $val) {
+            $params[$key] = $this->replacePlaceHolder($val);
+        }
+
+        // Compile url with query params
+        $queryStr = '';
+        foreach ($params as $key => $value) {
+            if (empty($queryStr)) {
+                $queryStr .= '?';
+            } else {
+                $queryStr .= '&';
+            }
+
+            $queryStr .= $key . '=' . $value;
+        }
+
+        $url .= $queryStr;
+
+        if (version_compare(ClientInterface::VERSION, '6.0', '>=')) {
+            $this->request = new Request($method, $url, $this->headers);
+        } else {
+            $this->request = $this->getClient()->createRequest($method, $url);
+            if (!empty($this->headers)) {
+                $this->request->addHeaders($this->headers);
+            }
+        }
+
+        $this->sendRequest();
+    }
+
+    /**
      * Sends HTTP request to specific URL with raw body from PyString.
      *
      * @param string       $method request method
@@ -237,6 +281,7 @@ class WebApiContext implements ApiClientAwareContext
 
         $this->sendRequest();
     }
+
 
     /**
      * Checks that response has specific status code.

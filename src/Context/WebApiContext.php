@@ -598,7 +598,7 @@ class WebApiContext implements ApiClientAwareContext
      *
      * @throws \RuntimeException
      *
-     * @Then /^(?:the )?response should contain xml elements "([^"]*)" in count "([^"]*)" $/
+     * @Then /^(?:the )?response should contain xml elements "([^"]*)" in count (\d+)$/
      */
     public function theResponseShouldContainXmlElementsInCount($xpath, $count)
     {
